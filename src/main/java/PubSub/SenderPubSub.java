@@ -1,11 +1,11 @@
-package queues;
+package PubSub;
 
 import com.conections.rabbitmqdocker.Connect;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-public class SenderWorkQueue {
-    private static String NAME_QUEUE = "WORKQUEUE";
+public class SenderPubSub {
+    private static String NAME_EXCHANGE = "FANOUTEXCHANGE";
 
     public static void main(String[] args) throws Exception{
 
@@ -14,9 +14,9 @@ public class SenderWorkQueue {
 
         try(Connection connection = factory.newConnection()){
             Channel channel = connection.createChannel(); //Create channel
-            channel.queueDeclare(NAME_QUEUE, false, false, false, null); //create queue
-            String message = "..............";
-            channel.basicPublish("", NAME_QUEUE, null, message.getBytes()); //send message to channel
-        };
+            channel.exchangeDeclare(NAME_EXCHANGE,"fanout");
+            String message = "Hi!, test with queues  in exchange pub/sub system";
+            channel.basicPublish(NAME_EXCHANGE, "", null, message.getBytes()); //send message to channel
+        }
     }
 }
